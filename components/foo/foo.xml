@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="foo" extends="Scene"> 
+  <children>
+    <Video id="twitch-stream" width="1280" height="720" />
+  </children>
+  <script type="text/brightscript" uri="foo.brs" />
+</component>

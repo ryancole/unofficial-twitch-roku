@@ -1,26 +1,25 @@
+require("dotenv").config();
+
 const fetch = require("node-fetch");
 
-const username = "gamesdonequick";
-const applicationId = "pcdjy8a0sdxa91gw3tlav9iotrv7xn";
-
-async function fetchAccessToken() {
-  const url = `https://api.twitch.tv/api/channels/${username}/access_token?client_id=${applicationId}`;
+async function fetchAccessToken(channel, applicationId) {
+  const url = `https://api.twitch.tv/api/channels/${channel}/access_token?client_id=${applicationId}`;
   const response = await fetch(url);
   const { sig, token } = await response.json();
   return { sig, token };
 }
 
-async function fetchUsherStream(sig, token) {
-  const url = `https://usher.ttvnw.net/api/channel/hls/${username}.m3u8?sig=${sig}&token=${encodeURI(
-    token
-  )}`;
+async function fetchUsherStream(channel, sig, token) {
+  const encodedToken = encodeURI(token);
+  const url = `https://usher.ttvnw.net/api/channel/hls/${channel}.m3u8?sig=${sig}&token=${encodedToken}`;
   const response = await fetch(url);
   return response.url;
 }
 
 async function main() {
-  const { sig, token } = await fetchAccessToken();
-  const url = await fetchUsherStream(sig, token);
+  const { CHANNEL, APPLICATION_ID } = process.env;
+  const { sig, token } = await fetchAccessToken(CHANNEL, APPLICATION_ID);
+  const url = await fetchUsherStream(CHANNEL, sig, token);
   console.log(url);
 }
 

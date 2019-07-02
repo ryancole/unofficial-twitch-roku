@@ -17,10 +17,21 @@ async function fetchUsherStream(channel, sig, token) {
 }
 
 async function main() {
-  const { CHANNEL, APPLICATION_ID } = process.env;
-  const { sig, token } = await fetchAccessToken(CHANNEL, APPLICATION_ID);
-  const url = await fetchUsherStream(CHANNEL, sig, token);
-  console.log(url);
+  const channel = extractCommandArgs(process.argv);
+  if (channel) {
+    const { APPLICATION_ID } = process.env;
+    const { sig, token } = await fetchAccessToken(channel, APPLICATION_ID);
+    const url = await fetchUsherStream(channel, sig, token);
+    console.log(url);
+  }
+}
+
+function extractCommandArgs(argv) {
+  if (argv.length != 3) {
+    console.error("expects channel name on command line");
+  } else {
+    return argv[2];
+  }
 }
 
 main();
